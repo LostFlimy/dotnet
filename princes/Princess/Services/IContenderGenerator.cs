@@ -4,5 +4,5 @@ namespace Nsu.Princess.Services;
 
 public interface IContenderGenerator
 {
-    List<Contender> GenerateContenders(int count);
+    List<Contender> GenerateContenders();
 }

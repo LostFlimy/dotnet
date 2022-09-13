@@ -4,22 +4,22 @@ namespace Nsu.Princess.Services;
 
 public class Hall : IHall
 {
-    private List<Contender> contenders;
-    private List<Contender> alreadyGoes;
+    private List<Contender> _contenders;
+    private List<Contender> _alreadyGoes;
     
-    public Hall(List<Contender> contenders)
+    public Hall(IContenderGenerator generator)
     {
-        this.contenders = contenders;
-        alreadyGoes = new List<Contender>();
+        _contenders = generator.GenerateContenders();
+        _alreadyGoes = new List<Contender>();
     }
     
     public string? GetNewContenderName()
     {
-        if (contenders.Count > 0)
+        if (_contenders.Count > 0)
         {
-            Contender newContender = contenders[0];
-            alreadyGoes.Add(newContender);
-            contenders.RemoveAt(0);
+            Contender newContender = _contenders[0];
+            _alreadyGoes.Add(newContender);
+            _contenders.RemoveAt(0);
             return newContender.Name;
         }
 
@@ -28,7 +28,7 @@ public class Hall : IHall
 
     public int GetContenderLevelByName(string name)
     {
-        foreach (Contender contender in contenders)
+        foreach (Contender contender in _contenders)
         {
             if (contender.Name.Equals(name))
             {
@@ -36,7 +36,7 @@ public class Hall : IHall
             }
         }
 
-        foreach (Contender contender in alreadyGoes)
+        foreach (Contender contender in _alreadyGoes)
         {
             if (contender.Name.Equals(name))
             {
@@ -49,7 +49,7 @@ public class Hall : IHall
 
     public bool IsGoToPrincess(string name)
     {
-        foreach (Contender contender in alreadyGoes)
+        foreach (Contender contender in _alreadyGoes)
         {
             if (contender.Name.Equals(name))
             {
@@ -57,6 +57,27 @@ public class Hall : IHall
             }
         }
         
+        return false;
+    }
+
+    public bool Exists(string name)
+    {
+        foreach (Contender contender in _contenders)
+        {
+            if (contender.Name.Equals(name))
+            {
+                return true;
+            }
+        }
+
+        foreach (Contender contender in _alreadyGoes)
+        {
+            if (contender.Name.Equals(name))
+            {
+                return true;
+            }
+        }
+
         return false;
     }
 }

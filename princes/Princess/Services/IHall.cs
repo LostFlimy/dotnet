@@ -7,4 +7,6 @@ public interface IHall
     int GetContenderLevelByName(string name);
 
     bool IsGoToPrincess(string name);
+
+    bool Exists(string name);
 }

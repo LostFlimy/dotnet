@@ -7,12 +7,8 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        List<Contender> generatedContenders = new ContenderGenerator().GenerateContenders(100);
-        foreach (var contender in generatedContenders)
-        {
-            Console.WriteLine(contender);
-        }
-        //CreateHostBuilder(args).Build().Run();
+        var host = CreateHostBuilder(args).Build();
+        host.Run();
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args)
@@ -21,9 +17,9 @@ public class Program
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddHostedService<Services.Princess>();
-                services.AddScoped<Hall>();
-                services.AddScoped<Friend>();
-                services.AddScoped<ContenderGenerator>();
+                services.AddScoped<IHall, Hall>();
+                services.AddScoped<IFriend, Friend>();
+                services.AddSingleton<IContenderGenerator, ContenderGenerator>();
             });
     }
 }

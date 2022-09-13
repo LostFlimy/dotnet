@@ -1,24 +1,25 @@
-﻿using Nsu.Princess.Model;
+﻿using Nsu.Princess.Configuration;
+using Nsu.Princess.Model;
 
 namespace Nsu.Princess.Services;
 
 public class ContenderGenerator : IContenderGenerator
 {
-    private List<string> names;
-    private int generatedCount;
+    private List<string> _names;
+    private int _generatedCount;
 
     public ContenderGenerator()
     {
-        names = new List<string>();
-        generatedCount = 0;
+        _names = new List<string>();
+        _generatedCount = 0;
     }
 
-    public List<Contender> GenerateContenders(int count)
+    public List<Contender> GenerateContenders()
     {
         GenerateNames();
         List<Contender> resultList = new List<Contender>();
 
-        for (int i = 0; i < count; ++i)
+        for (int i = 0; i < ApplicationConfig.CONTENDERS_NUMBER; ++i)
         {
             Contender newContender = GenerateUnique();
             while (resultList.Contains(newContender))
@@ -37,7 +38,7 @@ public class ContenderGenerator : IContenderGenerator
         string? name;
         while ((name = reader.ReadLine()) != null)
         {
-            names.Add(name);
+            _names.Add(name);
         }
         reader.Close();
     }
@@ -59,10 +60,10 @@ public class ContenderGenerator : IContenderGenerator
     
     private Contender GenerateUnique()
     {
-        int pickedNameIndex = Random.Shared.Next(0, names.Count);
-        generatedCount++;
-        Contender generatedContender = new Contender(names[pickedNameIndex], generatedCount);
-        names.RemoveAt(pickedNameIndex);
+        int pickedNameIndex = Random.Shared.Next(0, _names.Count);
+        _generatedCount++;
+        Contender generatedContender = new Contender(_names[pickedNameIndex], _generatedCount);
+        _names.RemoveAt(pickedNameIndex);
         return generatedContender;
     }
 }

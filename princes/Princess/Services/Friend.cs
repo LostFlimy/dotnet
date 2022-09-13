@@ -1,4 +1,6 @@
-﻿namespace Nsu.Princess.Services;
+﻿using Nsu.Princess.Exceptions;
+
+namespace Nsu.Princess.Services;
 
 public class Friend : IFriend
 {
@@ -16,6 +18,13 @@ public class Friend : IFriend
             return ((_hall.GetContenderLevelByName(first) > _hall.GetContenderLevelByName(second)) ? first : second);
         }
 
-        throw new ArgumentException("This contender is never been at princess or not exist");
+        if (_hall.Exists(first) && _hall.Exists(second))
+        {
+            throw new ContenderNotVisitPrincessException(
+                first + " or " + second + " have not yet visited the princess."
+            );
+        }
+
+        throw new ContenderNotExistsException(first + " or " + second + " not exists.");
     }
 }
