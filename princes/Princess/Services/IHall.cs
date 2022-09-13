@@ -1,6 +1,4 @@
-﻿using princes.Model;
-
-namespace princes.Services;
+﻿namespace Nsu.Princess.Services;
 
 public interface IHall
 {

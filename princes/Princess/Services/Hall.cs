@@ -1,6 +1,6 @@
-﻿using princes.Model;
+﻿using Nsu.Princess.Model;
 
-namespace princes.Services;
+namespace Nsu.Princess.Services;
 
 public class Hall : IHall
 {

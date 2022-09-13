@@ -1,4 +1,4 @@
-﻿namespace princes.Services;
+﻿namespace Nsu.Princess.Services;
 
 public interface IFriend
 {

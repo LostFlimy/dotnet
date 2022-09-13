@@ -1,4 +1,4 @@
-﻿namespace princes.Model;
+﻿namespace Nsu.Princess.Model;
 
 public class Contender
 {
