@@ -34,7 +34,7 @@ public class ContenderGenerator : IContenderGenerator
 
     private void GenerateNames()
     {
-        StreamReader reader = new StreamReader("Properties/contendersNames.txt");
+        StreamReader reader = new StreamReader(ApplicationConfig.CONTENDERS_NAMES_PROPERTY);
         string? name;
         while ((name = reader.ReadLine()) != null)
         {

@@ -1,4 +1,5 @@
 ﻿using Nsu.Princess.Configuration;
+using Nsu.Princess.Exceptions;
 
 namespace Nsu.Princess.Services;
 
@@ -7,20 +8,17 @@ public class Princess : IHostedService
     private bool _running = true;
     private IHall _hall;
     private IFriend _friend;
-    private IContenderGenerator _generator;
 
     private List<string> _alreadyGoes;
     private IHostApplicationLifetime _appLifetime;
     public Princess(
         IHall hall,
         IFriend friend,
-        IContenderGenerator contenderGenerator,
         IHostApplicationLifetime appLifetime
     )
     {
         _hall = hall;
         _friend = friend;
-        _generator = contenderGenerator;
         _alreadyGoes = new List<string>();
         _appLifetime = appLifetime;
 
@@ -34,21 +32,30 @@ public class Princess : IHostedService
     {
         while (_running)
         {
-            string? newContender = FirstStrategy();
-            if (newContender is null && _alreadyGoes.Count == ApplicationConfig.CONTENDERS_NUMBER)
+            try
             {
-                Console.WriteLine(10);
-            }
+                string? newContender = FirstStrategy();
+                if (_alreadyGoes.Count == ApplicationConfig.CONTENDERS_NUMBER)
+                {
+                    Console.WriteLine(10);
+                }
 
-            if (newContender is null)
-            {
-                throw new Exception("Something wrong");
+                if (newContender is null)
+                {
+                    throw new Exception("Something wrong");
+                }
+
+                Console.WriteLine(newContender);
+                if (_running == false)
+                {
+                    Console.WriteLine(_hall.GetContenderLevelByName(newContender));
+                    _appLifetime.StopApplication();
+                }
             }
-            Console.WriteLine(newContender);
-            if (_running == false)
+            catch (NoMoreContendersException ex)
             {
-                Console.WriteLine(_hall.GetContenderLevelByName(newContender));
-                _appLifetime.StopApplication();
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(10);
             }
         }
     }
@@ -58,13 +65,10 @@ public class Princess : IHostedService
         return Task.CompletedTask;
     }
 
-    private string? FirstStrategy()
+    private string FirstStrategy()
     {
-        string? newContender = _hall.GetNewContenderName();
-        if (newContender is null)
-        {
-            return newContender;
-        }
+        string newContender = _hall.GetNewContenderName();
+        
         if (_alreadyGoes.Count < ApplicationConfig.CONTENDERS_NUMBER / 2)
         {
             _alreadyGoes.Add(newContender);

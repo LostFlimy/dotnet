@@ -17,8 +17,8 @@ public class Program
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddHostedService<Services.Princess>();
-                services.AddScoped<IHall, Hall>();
-                services.AddScoped<IFriend, Friend>();
+                services.AddSingleton<IHall, Hall>();
+                services.AddSingleton<IFriend, Friend>();
                 services.AddSingleton<IContenderGenerator, ContenderGenerator>();
             });
     }

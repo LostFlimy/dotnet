@@ -1,6 +1,6 @@
 ﻿namespace Nsu.Princess.Exceptions;
 
-public class ContenderNotVisitPrincessException : ArgumentException
+public class ContenderNotVisitPrincessException : SystemException
 {
     public ContenderNotVisitPrincessException(string message) : base(message){}
 }

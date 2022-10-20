@@ -1,4 +1,5 @@
-﻿using Nsu.Princess.Model;
+﻿using Nsu.Princess.Exceptions;
+using Nsu.Princess.Model;
 
 namespace Nsu.Princess.Services;
 
@@ -13,7 +14,7 @@ public class Hall : IHall
         _alreadyGoes = new List<Contender>();
     }
     
-    public string? GetNewContenderName()
+    public string GetNewContenderName()
     {
         if (_contenders.Count > 0)
         {
@@ -23,7 +24,7 @@ public class Hall : IHall
             return newContender.Name;
         }
 
-        return null;
+        throw new NoMoreContendersException("Больше не осталось претиндентов!");
     }
 
     public int GetContenderLevelByName(string name)

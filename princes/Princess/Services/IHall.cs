@@ -2,7 +2,7 @@
 
 public interface IHall
 {
-    string? GetNewContenderName();
+    string GetNewContenderName();
 
     int GetContenderLevelByName(string name);
 
