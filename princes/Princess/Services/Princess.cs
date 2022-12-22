@@ -1,5 +1,6 @@
 ﻿using Nsu.Princess.Configuration;
 using Nsu.Princess.Exceptions;
+using Nsu.Princess.Model;
 
 namespace Nsu.Princess.Services;
 
@@ -25,7 +26,8 @@ public class Princess : IHostedService
     }
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        return Task.Run(RunAsync);
+        Task.Run(RunAsync);
+        return Task.CompletedTask;
     }
 
     private void RunAsync()
@@ -34,21 +36,21 @@ public class Princess : IHostedService
         {
             try
             {
-                string? newContender = FirstStrategy();
+                PrincessChoice choice = FirstStrategy();
                 if (_alreadyGoes.Count == ApplicationConfig.CONTENDERS_NUMBER)
                 {
                     Console.WriteLine(10);
                 }
 
-                if (newContender is null)
+                if (choice is null || choice.Name is null)
                 {
                     throw new Exception("Something wrong");
                 }
 
-                Console.WriteLine(newContender);
+                Console.WriteLine(choice.Name);
                 if (_running == false)
                 {
-                    Console.WriteLine(_hall.GetContenderLevelByName(newContender));
+                    Console.WriteLine(choice.Rank);
                     _appLifetime.StopApplication();
                 }
             }
@@ -56,6 +58,7 @@ public class Princess : IHostedService
             {
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(10);
+                throw;
             }
         }
     }
@@ -65,14 +68,14 @@ public class Princess : IHostedService
         return Task.CompletedTask;
     }
 
-    private string FirstStrategy()
+    public PrincessChoice FirstStrategy()
     {
         string newContender = _hall.GetNewContenderName();
         
         if (_alreadyGoes.Count < ApplicationConfig.CONTENDERS_NUMBER / 2)
         {
             _alreadyGoes.Add(newContender);
-            return newContender;
+            return new PrincessChoice(newContender, 0, ApplicationConfig.NEGATIVE_ANSWER);
         }
 
         int betterThen = 0;
@@ -89,8 +92,17 @@ public class Princess : IHostedService
         if (betterThen > ApplicationConfig.CONTENDERS_NUMBER / 2)
         {
             _running = false;
+            return new PrincessChoice(
+                newContender, 
+                _hall.GetContenderLevelByName(newContender), 
+                ApplicationConfig.POSITIVE_ANSWER
+                );
         }
 
-        return newContender;
+        return new PrincessChoice(
+            newContender, 
+            _hall.GetContenderLevelByName(newContender), 
+            ApplicationConfig.NEGATIVE_ANSWER
+        );
     }
 }

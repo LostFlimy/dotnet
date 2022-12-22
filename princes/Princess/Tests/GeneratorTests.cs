@@ -7,9 +7,10 @@ namespace Nsu.Princess.Tests;
 [TestFixture]
 public class GeneratorTests
 {
-    private readonly IContenderGenerator _contenderGenerator;
+    private IContenderGenerator _contenderGenerator;
 
-    public GeneratorTests()
+    [SetUp]
+    public void SetUp()
     {
         _contenderGenerator = new ContenderGenerator();
     }
@@ -25,7 +26,7 @@ public class GeneratorTests
             {
                 if (j != i)
                 {
-                    Assert.That(!generatedContenders[i].Equals(generatedContenders[j]));
+                    Assert.AreNotEqual(generatedContenders[i],generatedContenders[j]);
                 }
             }
         }
